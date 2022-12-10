@@ -7,7 +7,7 @@ const postSchema = new mongoose.Schema ({
   linkURL: String,
   likes: Array,
   comments: [{user: String, comment: String}]
-} {timestamp: true})
+}, {timestamp: true})
 
 const Post = mongoose.model('Post', postSchema)
 

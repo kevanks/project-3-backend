@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 
 let PORT = 3000;
-if(process.env.PORT){
+if (process.env.PORT) {
   PORT = process.env.PORT
 }
 
@@ -22,7 +22,7 @@ app.post('/', (req, res) => {
 
 // Index Route
 app.get('/', (req, res) => {
-  Post.find({}, (err, foundPosts) => {
+  Post.find({}).sort({ updatedAt: -1 }).exec((err, foundPosts) => {
     res.json(foundPosts)
   })
 })
@@ -36,7 +36,7 @@ app.delete('/:id', (req, res) => {
 
 // Update Route
 app.put('/:id', (req, res) => {
-  Post.findByIdAndUpdate(req.params.id, req.body, {new:true}, (err, updatedPost) => {
+  Post.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedPost) => {
     res.json(updatedPost)
   })
 })

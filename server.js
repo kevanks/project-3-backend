@@ -41,6 +41,26 @@ app.put('/:id', (req, res) => {
   })
 })
 
+// Search Route
+app.get('/search/:query', (req, res) => {
+  Post.aggregate([// copied from "query syntax" on mongodb
+    {
+      '$search': {
+        'index': 'default',
+        'text': {
+          'query': req.params.query,
+          'path': {
+            'wildcard': '*'
+          }
+        }
+      }
+    }
+  ]).exec((err, foundPosts) => {// req.params.query
+    console.log(err);
+    res.json(foundPosts)
+  })
+})
+
 // Connections
 mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority', () => {
   console.log('Connected to Mongo');

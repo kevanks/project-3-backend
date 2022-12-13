@@ -9,7 +9,9 @@ user.get('/', (req, res) => {
 
 user.post('/createaccount', (req, res) => {
   req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+  console.log(req.body);
   User.create(req.body, (err, createdUser) => {
+    console.log(createdUser);
     if(err) {
       console.log(err);
       res.json(err.message)
@@ -20,7 +22,7 @@ user.post('/createaccount', (req, res) => {
   })
 })
 
-user.put('/login', (req, res) => {
+user.post('/login', (req, res) => {
   console.log(req.body);
   User.findOne({username: req.body.username}, (err, foundUser) => {
     if(err) {

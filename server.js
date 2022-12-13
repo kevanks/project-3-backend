@@ -6,8 +6,11 @@ const app = express();
 const Post = require('./models/post.js')
 const User = require('./models/user.js')
 
+const db = mongoose.connection
+
 app.use(express.json());
 app.use(cors());
+app.use(methodOverride('_method'))
 app.use(express.urlencoded({extended:true}))
 
 let PORT = 3000;
@@ -47,15 +50,18 @@ app.put('/:id', (req, res) => {
 // user auth
 // Connections
 mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  },
+  // {
+  //   useNewUrlParser: true,
+  //   useUnifiedTopology: true,
+  //   // useFindAndModify: false,
+  //   // useCreateIndex: true,
+  // },
  () => {
   console.log('Connected to Mongo');
 });
+
+db.on('error', (err) => console.log(err.message + ' is mongod not running?'))
+db.on('disconnected', () => console.log('mongo disconnected'))
 
 const userController = require('./controllers/user_controller.js')
 app.use('/', userController)

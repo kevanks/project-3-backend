@@ -14,7 +14,7 @@ app.use(methodOverride('_method'))
 app.use(express.urlencoded({extended:true}))
 
 let PORT = 3000;
-if(process.env.PORT){
+if (process.env.PORT) {
   PORT = process.env.PORT
 }
 
@@ -28,7 +28,7 @@ app.post('/', (req, res) => {
 
 // Index Route
 app.get('/', (req, res) => {
-  Post.find({}, (err, foundPosts) => {
+  Post.find({}).sort({ updatedAt: -1 }).exec((err, foundPosts) => {
     res.json(foundPosts)
   })
 })
@@ -42,12 +42,33 @@ app.delete('/:id', (req, res) => {
 
 // Update Route
 app.put('/:id', (req, res) => {
-  Post.findByIdAndUpdate(req.params.id, req.body, {new:true}, (err, updatedPost) => {
+  Post.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedPost) => {
     res.json(updatedPost)
   })
 })
 
+
 // user auth
+// Search Route
+app.get('/search/:query', (req, res) => {
+  Post.aggregate([// copied from "query syntax" on mongodb
+    {
+      '$search': {
+        'index': 'default',
+        'text': {
+          'query': req.params.query,
+          'path': {
+            'wildcard': '*'
+          }
+        }
+      }
+    }
+  ]).exec((err, foundPosts) => {// req.params.query
+    console.log(err);
+    res.json(foundPosts)
+  })
+})
+
 // Connections
 mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority',
   // {

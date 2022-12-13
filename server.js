@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const methodOverride = require('method-override')
 const app = express();
 const Post = require('./models/post.js')
+const User = require('./models/user.js')
 
 app.use(express.json());
 app.use(cors());
+app.use(express.urlencoded({extended:true}))
 
 let PORT = 3000;
 if(process.env.PORT){
@@ -41,11 +44,21 @@ app.put('/:id', (req, res) => {
   })
 })
 
+// user auth
 // Connections
-mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority', () => {
+mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+ () => {
   console.log('Connected to Mongo');
 });
 
+const userController = require('./controllers/user_controller.js')
+app.use('/', userController)
 
 app.listen(PORT, () => {
   console.log("Listening...");

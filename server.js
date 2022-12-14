@@ -11,7 +11,7 @@ const db = mongoose.connection
 app.use(express.json());
 app.use(cors());
 app.use(methodOverride('_method'))
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }))
 
 let PORT = 3000;
 if (process.env.PORT) {
@@ -69,6 +69,20 @@ app.get('/search/:query', (req, res) => {
   })
 })
 
+// get list of collections - using usernames right now to test
+app.get('/community-list', (req, res) => {
+  Post.distinct('user', (error, foundCommunities) => {
+    res.json(foundCommunities)
+  })
+})
+
+// get list of collections - using usernames right now to test
+app.get('/community/:community', (req, res) => {
+  Post.find({ user: req.params.community }).exec((err, communityPosts) => {
+    res.json(communityPosts)
+  })
+})
+
 // Connections
 mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net/?retryWrites=true&w=majority',
   // {
@@ -77,9 +91,9 @@ mongoose.connect('mongodb+srv://kevanks:berserk2018@cluster0.fqh55jt.mongodb.net
   //   // useFindAndModify: false,
   //   // useCreateIndex: true,
   // },
- () => {
-  console.log('Connected to Mongo');
-});
+  () => {
+    console.log('Connected to Mongo');
+  });
 
 db.on('error', (err) => console.log(err.message + ' is mongod not running?'))
 db.on('disconnected', () => console.log('mongo disconnected'))

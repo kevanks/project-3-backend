@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt')
 const user = express.Router()
 const User = require('../models/user.js')
 
-user.get('/', (req, res) => {
-  res.json('')
+user.get('/user', (req, res) => {
+  res.json('hello world')
 })
 
 user.post('/createaccount', (req, res) => {
@@ -22,8 +22,9 @@ user.post('/createaccount', (req, res) => {
   })
 })
 
-user.post('/login', (req, res) => {
+user.put('/login', (req, res) => {
   console.log(req.body);
+  console.log("login???");
   User.findOne({username: req.body.username}, (err, foundUser) => {
     if(err) {
       res.json('There was an error. Please try again.')

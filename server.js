@@ -71,14 +71,14 @@ app.get('/search/:query', (req, res) => {
 
 // get list of collections - using usernames right now to test
 app.get('/community-list', (req, res) => {
-  Post.distinct('user', (error, foundCommunities) => {
+  Post.distinct('community', (error, foundCommunities) => {
     res.json(foundCommunities)
   })
 })
 
 // get list of collections - using usernames right now to test
 app.get('/community/:community', (req, res) => {
-  Post.find({ user: req.params.community }).exec((err, communityPosts) => {
+  Post.find({ community: req.params.community }).exec((err, communityPosts) => {
     res.json(communityPosts)
   })
 })

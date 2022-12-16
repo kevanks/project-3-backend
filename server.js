@@ -28,7 +28,7 @@ app.post('/', (req, res) => {
 
 // Index Route
 app.get('/', (req, res) => {
-  Post.find({}).sort({ updatedAt: -1 }).exec((err, foundPosts) => {
+  Post.find({}).sort({ _id: -1 }).exec((err, foundPosts) => {
     res.json(foundPosts)
   })
 })
@@ -78,7 +78,7 @@ app.get('/community-list', (req, res) => {
 
 // get list of collections - using usernames right now to test
 app.get('/community/:community', (req, res) => {
-  Post.find({ community: req.params.community }).exec((err, communityPosts) => {
+  Post.find({ community: req.params.community }).sort({ _id: -1 }).exec((err, communityPosts) => {
     res.json(communityPosts)
   })
 })
